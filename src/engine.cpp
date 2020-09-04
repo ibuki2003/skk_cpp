@@ -33,6 +33,7 @@ void SkkEngine::update(char c) {
             return update(c);
         } else {
             if (c == ' ') {
+                henkan_buf += roman_confirm();
                 search_candidates();
                 phase = BufferPhase::HENKAN;
                 return;
