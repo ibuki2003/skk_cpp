@@ -6,6 +6,7 @@
 
 void SkkEngine::update(char c) {
     bool upper = false;
+    char orig_c = c;
     if (isupper(c)) {
         upper = true;
         c = tolower(c);
@@ -65,7 +66,7 @@ void SkkEngine::update(char c) {
         } else {
             henkan_confirm();
             phase = BufferPhase::IDLE;
-            if (c != '\n') return update(c);
+            if (c != '\n') return update(orig_c);
         }
     }
 }
