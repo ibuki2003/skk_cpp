@@ -36,7 +36,13 @@ void SkkEngine::update(char c) {
             if (c == ' ') {
                 henkan_buf += roman_confirm();
                 search_candidates();
-                phase = BufferPhase::HENKAN;
+                if (henkan_candidates.size())
+                    phase = BufferPhase::HENKAN;
+                else {
+                    phase = BufferPhase::IDLE;
+                    out_buf += henkan_buf;
+                    henkan_buf = "";
+                }
                 return;
             } else {
                 if (c == 127) { // BS
@@ -57,7 +63,13 @@ void SkkEngine::update(char c) {
         roman_buf.push_back(c);
         if (roman_buf.size() && roman_resolveable()) {
             search_candidates();
-            phase = BufferPhase::HENKAN;
+            if (henkan_candidates.size())
+                phase = BufferPhase::HENKAN;
+            else {
+                out_buf += henkan_buf;
+                out_buf += roman_resolve();
+                phase = BufferPhase::IDLE;
+            }
         }
     } else if (phase == BufferPhase::HENKAN) {
         if (c == ' ') {
@@ -148,7 +160,9 @@ void SkkEngine::search_candidates() {
         }
     }
 
-    henkan_idx = 0;
-    roman_buf = "";
-    henkan_buf = "";
+    if (henkan_candidates.size()) {
+        henkan_idx = 0;
+        roman_buf = "";
+        henkan_buf = "";
+    }
 }
