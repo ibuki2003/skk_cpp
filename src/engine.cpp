@@ -21,6 +21,7 @@ void SkkEngine::update(char c) {
         if (!isalpha(c)) {
             if (c == 127) { // BS
                 bs_roman() || bs_henkan() || bs_out();
+                return;
             }
             out_buf += roman_confirm();
         }
@@ -100,6 +101,8 @@ bool SkkEngine::roman_resolveable() {
     }
     for (int i = 0; i < roman_buf.size(); ++i) {
         if (iter->first.size() <= i || roman_buf[i] != iter->first[i]) {
+            char f = *roman_buf.begin();
+            if (!isalpha(f)) out_buf += f;
             roman_buf.erase(roman_buf.begin());
             return roman_resolveable();
         }
